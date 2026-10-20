@@ -9,8 +9,10 @@
 <meta name="theme-color" content="#0B0D0C">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,600;12..96,700&family=Hanken+Grotesk:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
+  h1, h2, h3 { font-optical-sizing: auto; text-wrap: balance; }
+  p { text-wrap: pretty; }
   :root {
     --bg: #0B0D0C;
     --surface: #141716;
@@ -25,11 +27,11 @@
   }
   * { box-sizing: border-box; }
   html { background: var(--bg); }
-  body { margin: 0; background: var(--bg); color: var(--text); font: 400 16px/1.65 Inter, system-ui, sans-serif; -webkit-font-smoothing: antialiased; }
+  body { margin: 0; background: var(--bg); color: var(--text); font: 400 16px/1.65 "Hanken Grotesk", system-ui, sans-serif; -webkit-font-smoothing: antialiased; }
   a { color: var(--accent); text-underline-offset: 3px; }
-  h1, h2, h3, .mark { font-family: "Space Grotesk", Inter, sans-serif; letter-spacing: -.02em; }
+  h1, h2, h3, .mark { font-family: "Bricolage Grotesque", "Hanken Grotesk", sans-serif; letter-spacing: -.02em; }
   .wrap { max-width: 1400px; margin: 0 auto; padding: 0 24px; }
-  .eyebrow { font: 600 12px/1.4 Inter, sans-serif; letter-spacing: .14em; text-transform: uppercase; color: var(--accent); margin: 0 0 12px; }
+  .eyebrow { font: 600 12px/1.4 "Hanken Grotesk", sans-serif; letter-spacing: .14em; text-transform: uppercase; color: var(--accent); margin: 0 0 12px; }
 
   /* Nav */
   nav { position: fixed; inset: 0 0 auto; z-index: 30; transition: background-color .4s var(--ease-std), border-color .4s var(--ease-std); border-bottom: 1px solid transparent; }
@@ -41,7 +43,7 @@
   nav ul a { color: rgba(236, 234, 228, .85); text-decoration: none; text-shadow: 0 1px 8px rgba(0,0,0,.45); transition: color .25s var(--ease-std); }
   nav.solid ul a { color: var(--muted); text-shadow: none; }
   nav ul a:hover, nav ul a.active { color: var(--text); }
-  .ig { margin-left: auto; display: inline-flex; align-items: center; gap: 8px; color: var(--text); text-decoration: none; font-size: 14px; font-weight: 600; border: 1px solid rgba(255,255,255,.18); border-radius: 999px; padding: 8px 14px; transition: border-color .25s var(--ease-std), transform .25s var(--ease-std); }
+  .ig { display: inline-flex; align-items: center; gap: 8px; color: var(--text); text-decoration: none; font-size: 14px; font-weight: 600; border: 1px solid rgba(255,255,255,.18); border-radius: 999px; padding: 8px 14px; transition: border-color .25s var(--ease-std), transform .25s var(--ease-std); }
 
   .ig svg { width: 16px; height: 16px; }
 
@@ -122,6 +124,7 @@
   @media (max-width: 900px) {
     :root { --row: 180px; }
     nav ul { display: none; }
+    .ig { margin-left: auto; }
     .info { grid-template-columns: 1fr; gap: 48px; padding-top: 88px; }
     .lb figure { padding: 64px 12px 8px; }
     .lb .prev, .lb .next { top: auto; bottom: 14px; transform: none; }
