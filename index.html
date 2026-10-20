@@ -1,0 +1,352 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Carson Orejola · car_sore</title>
+<meta name="description" content="Wildlife, landscape and street photography by Carson Orejola (@car_sore).">
+<meta name="theme-color" content="#0B0D0C">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0B0D0C;
+    --surface: #141716;
+    --text: #ECEAE4;
+    --muted: #9AA39F;
+    --line: rgba(255, 255, 255, .08);
+    --accent: #96D1AA;
+    --lemon: #FFEFAE;
+    --ease-out: cubic-bezier(.22, 1, .36, 1);
+    --ease-std: cubic-bezier(.4, 0, .2, 1);
+    --row: 260px;
+  }
+  * { box-sizing: border-box; }
+  html { background: var(--bg); }
+  body { margin: 0; background: var(--bg); color: var(--text); font: 400 16px/1.65 Inter, system-ui, sans-serif; -webkit-font-smoothing: antialiased; }
+  a { color: var(--accent); text-underline-offset: 3px; }
+  h1, h2, h3, .mark { font-family: "Space Grotesk", Inter, sans-serif; letter-spacing: -.02em; }
+  .wrap { max-width: 1400px; margin: 0 auto; padding: 0 24px; }
+  .eyebrow { font: 600 12px/1.4 Inter, sans-serif; letter-spacing: .14em; text-transform: uppercase; color: var(--accent); margin: 0 0 12px; }
+
+  /* Nav */
+  nav { position: fixed; inset: 0 0 auto; z-index: 30; transition: background-color .4s var(--ease-std), border-color .4s var(--ease-std); border-bottom: 1px solid transparent; }
+  nav.solid { background: rgba(11, 13, 12, .82); backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px); border-color: var(--line); }
+  nav .wrap { display: flex; align-items: center; gap: 28px; height: 64px; }
+  .mark { color: var(--text); text-decoration: none; font-size: 18px; font-weight: 700; white-space: nowrap; }
+  .mark span { color: var(--muted); font-weight: 500; }
+  nav ul { display: flex; gap: 24px; list-style: none; margin: 0 0 0 auto; padding: 0; font-size: 14px; font-weight: 500; }
+  nav ul a { color: rgba(236, 234, 228, .85); text-decoration: none; text-shadow: 0 1px 8px rgba(0,0,0,.45); transition: color .25s var(--ease-std); }
+  nav.solid ul a { color: var(--muted); text-shadow: none; }
+  nav ul a:hover, nav ul a.active { color: var(--text); }
+  .ig { display: inline-flex; align-items: center; gap: 8px; color: var(--text); text-decoration: none; font-size: 14px; font-weight: 600; border: 1px solid rgba(255,255,255,.18); border-radius: 999px; padding: 8px 14px; transition: border-color .25s var(--ease-std), transform .25s var(--ease-std); }
+  .ig:hover { border-color: var(--accent); transform: translateY(-1px); }
+  .ig svg { width: 16px; height: 16px; }
+
+  /* Hero */
+  .hero { position: relative; height: 100svh; min-height: 560px; display: flex; align-items: flex-end; overflow: hidden; }
+  .hero img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; transform: scale(1.06); animation: settle 2.4s var(--ease-out) forwards; }
+  .hero::after { content: ""; position: absolute; inset: 0; background: linear-gradient(180deg, rgba(11,13,12,.35) 0%, rgba(11,13,12,0) 30%, rgba(11,13,12,.15) 55%, var(--bg) 100%); }
+  @keyframes settle { to { transform: scale(1); } }
+  .hero .wrap { position: relative; z-index: 1; width: 100%; padding-bottom: 72px; }
+  .hero h1 { font-size: clamp(44px, 8vw, 96px); font-weight: 700; line-height: .95; letter-spacing: -.035em; margin: 0 0 18px; }
+  .hero p { font-size: clamp(17px, 2vw, 20px); color: #D3D8D5; max-width: 560px; margin: 0 0 28px; }
+  .hero .handle { color: var(--accent); text-decoration: none; font-weight: 600; }
+  .chips { display: flex; flex-wrap: wrap; gap: 10px; }
+  .chips a { color: var(--text); text-decoration: none; font-size: 14px; font-weight: 500; padding: 9px 16px; border-radius: 999px; background: rgba(255,255,255,.08); border: 1px solid rgba(255,255,255,.12); backdrop-filter: blur(6px); transition: background-color .25s var(--ease-std), transform .25s var(--ease-std); }
+  .chips a:hover { background: rgba(150,209,170,.18); transform: translateY(-2px); }
+
+  /* Collections */
+  section { padding: 96px 0 24px; scroll-margin-top: 48px; }
+  .head { display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: space-between; gap: 12px 32px; margin-bottom: 28px; }
+  .head h2 { font-size: clamp(32px, 4.5vw, 52px); font-weight: 700; line-height: 1; margin: 0; }
+  .head p { color: var(--muted); max-width: 460px; margin: 0; }
+  .count { color: var(--muted); font-size: 14px; font-weight: 500; }
+
+  /* Justified rows: each tile grows in proportion to its aspect ratio */
+  .grid { display: flex; flex-wrap: wrap; gap: 8px; }
+  .grid::after { content: ""; flex-grow: 999; }
+  .tile { position: relative; flex-grow: var(--r); width: calc(var(--r) * var(--row)); padding: 0; border: 0; background: var(--surface); cursor: zoom-in; overflow: hidden; border-radius: 4px; }
+  .tile::before { content: ""; display: block; padding-top: calc(100% / var(--r)); }
+  .tile img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; opacity: 0; transform: scale(1.02); transition: opacity .7s var(--ease-out), transform .7s var(--ease-out); }
+  .tile img.loaded { opacity: 1; transform: none; }
+  .tile:hover img.loaded { transform: scale(1.035); }
+  .tile .cap { position: absolute; left: 0; right: 0; bottom: 0; padding: 28px 14px 12px; font-size: 13px; color: #fff; text-align: left; background: linear-gradient(transparent, rgba(0,0,0,.65)); opacity: 0; transform: translateY(6px); transition: opacity .3s var(--ease-std), transform .3s var(--ease-std); }
+  .tile:hover .cap, .tile:focus-visible .cap { opacity: 1; transform: none; }
+  .tile:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+  /* About / gear / contact */
+  .info { display: grid; grid-template-columns: 1.3fr 1fr; gap: 64px; padding: 120px 0 64px; border-top: 1px solid var(--line); margin-top: 96px; }
+  .info h2 { font-size: clamp(30px, 4vw, 44px); line-height: 1.05; margin: 0 0 20px; }
+  .info p { color: #C9CFCC; max-width: 620px; }
+  .gear { list-style: none; margin: 0; padding: 0; }
+  .gear li { display: flex; justify-content: space-between; gap: 16px; padding: 14px 0; border-bottom: 1px solid var(--line); }
+  .gear li span:last-child { color: var(--muted); text-align: right; }
+  .contact { text-align: center; padding: 88px 24px; margin: 32px 0 0; background: var(--surface); border: 1px solid var(--line); border-radius: 24px; }
+  .contact h2 { font-size: clamp(32px, 5vw, 56px); margin: 0 0 14px; }
+  .contact p { color: var(--muted); margin: 0 auto 28px; max-width: 480px; }
+  .btns { display: flex; flex-wrap: wrap; gap: 12px; justify-content: center; }
+  .btn { display: inline-flex; align-items: center; gap: 8px; padding: 14px 24px; border-radius: 999px; font-weight: 600; font-size: 15px; text-decoration: none; background: var(--accent); color: var(--bg); transition: transform .25s var(--ease-std), box-shadow .25s var(--ease-std); }
+  .btn:hover { transform: translateY(-2px); box-shadow: 0 10px 30px -12px var(--accent); }
+  .btn.outline { background: transparent; color: var(--text); border: 1px solid rgba(255,255,255,.18); }
+  .btn.outline:hover { border-color: var(--accent); box-shadow: none; }
+  footer { padding: 40px 0 56px; color: var(--muted); font-size: 14px; }
+  footer .wrap { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 12px; }
+
+  /* Lightbox */
+  .lb { position: fixed; inset: 0; z-index: 50; display: grid; grid-template-rows: 1fr auto; background: rgba(6, 7, 7, .96); opacity: 0; visibility: hidden; transition: opacity .35s var(--ease-std), visibility 0s .35s; }
+  .lb.open { opacity: 1; visibility: visible; transition: opacity .35s var(--ease-std); }
+  .lb figure { margin: 0; display: grid; place-items: center; padding: 56px 72px 12px; min-height: 0; }
+  .lb img { max-width: 100%; max-height: calc(100svh - 150px); object-fit: contain; border-radius: 2px; transition: opacity .25s var(--ease-std), transform .45s var(--ease-out); }
+  .lb img.swap { opacity: 0; transform: scale(.985); }
+  .lb .meta { display: flex; flex-wrap: wrap; justify-content: center; gap: 6px 22px; padding: 10px 24px 24px; font-size: 14px; color: var(--muted); text-align: center; }
+  .lb .meta b { color: var(--text); font-weight: 600; }
+  .lb button { position: absolute; display: grid; place-items: center; width: 48px; height: 48px; border-radius: 50%; border: 1px solid rgba(255,255,255,.14); background: rgba(255,255,255,.05); color: var(--text); font-size: 22px; cursor: pointer; transition: background-color .2s var(--ease-std), border-color .2s var(--ease-std); }
+  .lb button:hover { background: rgba(150,209,170,.15); border-color: var(--accent); }
+  .lb .close { top: 14px; right: 16px; }
+  .lb .prev { left: 14px; top: 50%; transform: translateY(-50%); }
+  .lb .next { right: 14px; top: 50%; transform: translateY(-50%); }
+  .lb .n { position: absolute; top: 26px; left: 24px; font-size: 13px; color: var(--muted); }
+
+  /* Reveal on scroll (only hidden once JS runs) */
+  .js .reveal { opacity: 0; transform: translateY(26px); transition: opacity .8s var(--ease-out), transform .8s var(--ease-out); }
+  .js .reveal.in { opacity: 1; transform: none; }
+  @keyframes rise { from { opacity: 0; transform: translateY(22px); } }
+  .hero .wrap > * { animation: rise .9s var(--ease-out) both; }
+  .hero .wrap > :nth-child(2) { animation-delay: .12s; }
+  .hero .wrap > :nth-child(3) { animation-delay: .24s; }
+  .hero .wrap > :nth-child(4) { animation-delay: .36s; }
+
+  @media (max-width: 900px) {
+    :root { --row: 180px; }
+    nav ul { display: none; }
+    .info { grid-template-columns: 1fr; gap: 48px; padding-top: 88px; }
+    .lb figure { padding: 64px 12px 8px; }
+    .lb .prev, .lb .next { top: auto; bottom: 14px; transform: none; }
+  }
+  @media (max-width: 480px) {
+    :root { --row: 130px; }
+    .wrap { padding: 0 16px; }
+    .grid { gap: 4px; }
+    .ig .label { display: none; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after { animation: none !important; transition: none !important; }
+    .js .reveal { opacity: 1; transform: none; }
+    .tile img { opacity: 1; transform: none; }
+  }
+</style>
+<script>document.documentElement.classList.add('js');</script>
+</head>
+<body>
+
+<nav id="nav">
+  <div class="wrap">
+    <a class="mark" href="#">Carson Orejola <span>· car_sore</span></a>
+    <ul>
+      <li><a href="#wildlife">Wildlife</a></li>
+      <li><a href="#landscapes">Landscapes</a></li>
+      <li><a href="#street">Street</a></li>
+      <li><a href="#details">Details</a></li>
+      <li><a href="#about">About</a></li>
+      <li><a href="#contact">Contact</a></li>
+    </ul>
+    <a class="ig" href="https://www.instagram.com/car_sore/" target="_blank" rel="noopener" aria-label="Follow @car_sore on Instagram">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"/></svg>
+      <span class="label">@car_sore</span>
+    </a>
+  </div>
+</nav>
+
+<header class="hero">
+  <img src="photos/wildlife/wildlife-02.jpg" alt="A bald eagle in flight against a pale grey sky">
+  <div class="wrap">
+    <p class="eyebrow">Photography</p>
+    <h1>Carson Orejola</h1>
+    <p>Wildlife, landscapes and the streets of Durham, shot on long glass and edited in Darktable. Follow along at <a class="handle" href="https://www.instagram.com/car_sore/" target="_blank" rel="noopener">@car_sore</a>.</p>
+    <div class="chips">
+      <a href="#wildlife">Wildlife</a><a href="#landscapes">Landscapes</a><a href="#street">Street</a><a href="#details">Details</a>
+    </div>
+  </div>
+</header>
+
+<main class="wrap" id="collections"></main>
+
+<div class="wrap">
+  <div class="info" id="about">
+    <div class="reveal">
+      <p class="eyebrow">About</p>
+      <h2>Slow walks,<br>long lenses.</h2>
+      <p>I'm Carson, a Technical Support Engineer in Durham, North Carolina, who spends free mornings out with a camera. What started as photographing my own neighborhood turned into trips to the Olympic Peninsula, Boston and Chattanooga, plenty of slow walks through downtown Durham, and an ever-growing Darktable library.</p>
+      <p>I like patient photography: waiting for a heron to look up, for fog to lift off a sea stack, or for the light to hit a brick wall just right.</p>
+    </div>
+    <div class="reveal" id="gear">
+      <p class="eyebrow">Gear</p>
+      <ul class="gear">
+        <li><span>Canon EOS R7</span><span>Main body</span></li>
+        <li><span>Canon RF 100–400mm f/5.6–8 IS USM</span><span>Wildlife &amp; landscapes</span></li>
+        <li><span>Canon EOS Rebel SL1</span><span>Where it started</span></li>
+        <li><span>Canon EF-S 55–250mm · EF-S 24mm f/2.8 · EF-S 18–55mm</span><span>SL1 lenses</span></li>
+        <li><span>Olympus E-500</span><span>Vintage DSLR</span></li>
+        <li><span>Darktable</span><span>Editing</span></li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="contact reveal" id="contact">
+    <p class="eyebrow">Contact</p>
+    <h2>Say hello.</h2>
+    <p>Questions about a photo, interested in a print, or want to shoot together? Send me an email or a DM.</p>
+    <div class="btns">
+      <a class="btn" href="mailto:carsoreo@gmail.com">carsoreo@gmail.com</a>
+      <a class="btn outline" href="https://www.instagram.com/car_sore/" target="_blank" rel="noopener">Instagram</a>
+    </div>
+  </div>
+</div>
+
+<footer>
+  <div class="wrap">
+    <span>© <span id="year">2026</span> Carson Orejola. All photos are my own; please ask before reusing.</span>
+    <a href="https://carsoreo.github.io/">Resume site →</a>
+  </div>
+</footer>
+
+<div class="lb" id="lb" role="dialog" aria-modal="true" aria-label="Photo viewer">
+  <span class="n" id="lb-n"></span>
+  <figure><img id="lb-img" alt=""></figure>
+  <div class="meta" id="lb-meta"></div>
+  <button class="close" id="lb-close" aria-label="Close">✕</button>
+  <button class="prev" id="lb-prev" aria-label="Previous photo">←</button>
+  <button class="next" id="lb-next" aria-label="Next photo">→</button>
+</div>
+
+<script src="photos.js"></script>
+<script>
+  const COLLECTIONS = {
+    wildlife: ['Wildlife', 'Eagles, herons, deer, chipmunks and dragonflies. Shot long, from the Carolinas to the Pacific Northwest.'],
+    landscapes: ['Landscapes', 'Fog, surf and old-growth forest. Most of these come from a rainy week on Washington’s Olympic Peninsula.'],
+    street: ['Street', 'Downtown Durham: tobacco-era brick, water towers, neon after dark, and whoever happens to walk by.'],
+    details: ['Details', 'Small things worth stopping for: mushrooms, spiders, wildflowers, a single raindrop.']
+  };
+  const calm = matchMedia('(prefers-reduced-motion: reduce)');
+  const photos = window.PHOTOS || [];
+  const main = document.getElementById('collections');
+  document.getElementById('year').textContent = new Date().getFullYear();
+
+  // Lens strings like "400mm" carry no lens name, so only show real lens names.
+  const lensName = p => /[A-Za-z]{2}/.test(p.lens.replace(/mm/g, '')) ? p.lens : '';
+  const caption = p => [p.place, p.date].filter(Boolean).join(' · ');
+
+  for (const [key, [title, blurb]] of Object.entries(COLLECTIONS)) {
+    const list = photos.filter(p => p.collection === key);
+    const sec = document.createElement('section');
+    sec.id = key;
+    sec.innerHTML = `<div class="head reveal"><div><p class="eyebrow">${list.length} photos</p><h2>${title}</h2></div><p>${blurb}</p></div><div class="grid"></div>`;
+    const grid = sec.querySelector('.grid');
+    for (const p of list) {
+      const i = photos.indexOf(p);
+      const b = document.createElement('button');
+      b.className = 'tile';
+      b.style.setProperty('--r', (p.w / p.h).toFixed(3));
+      b.setAttribute('aria-label', `Open ${title.toLowerCase()} photo${caption(p) ? ', ' + caption(p) : ''}`);
+      b.innerHTML = `<img src="${p.thumb}" alt="" loading="lazy" decoding="async"><span class="cap">${caption(p)}</span>`;
+      const img = b.querySelector('img');
+      img.complete ? img.classList.add('loaded') : img.addEventListener('load', () => img.classList.add('loaded'));
+      b.addEventListener('click', () => open(i));
+      grid.append(b);
+    }
+    main.append(sec);
+  }
+
+  // Lightbox
+  const lb = document.getElementById('lb'), lbImg = document.getElementById('lb-img');
+  let cur = -1, opener = null;
+  function show(i) {
+    cur = (i + photos.length) % photos.length;
+    const p = photos[cur];
+    lbImg.classList.add('swap');
+    const next = new Image();
+    next.onload = () => { lbImg.src = p.src; lbImg.alt = `${COLLECTIONS[p.collection][0]} photo${caption(p) ? ', ' + caption(p) : ''}`; requestAnimationFrame(() => lbImg.classList.remove('swap')); };
+    next.src = p.src;
+    document.getElementById('lb-n').textContent = `${cur + 1} / ${photos.length}`;
+    document.getElementById('lb-meta').innerHTML = [
+      caption(p) && `<b>${caption(p)}</b>`,
+      [p.camera, lensName(p)].filter(Boolean).join(' + '),
+      p.settings
+    ].filter(Boolean).map(s => `<span>${s}</span>`).join('');
+  }
+  function open(i) {
+    opener = document.activeElement;
+    show(i);
+    lb.classList.add('open');
+    document.body.style.overflow = 'hidden';
+    document.getElementById('lb-close').focus();
+  }
+  function close() {
+    lb.classList.remove('open');
+    document.body.style.overflow = '';
+    opener && opener.focus();
+  }
+  document.getElementById('lb-close').onclick = close;
+  document.getElementById('lb-prev').onclick = () => show(cur - 1);
+  document.getElementById('lb-next').onclick = () => show(cur + 1);
+  lb.addEventListener('click', e => { if (e.target === lb || e.target.tagName === 'FIGURE') close(); });
+  addEventListener('keydown', e => {
+    if (!lb.classList.contains('open')) return;
+    if (e.key === 'Escape') close();
+    if (e.key === 'ArrowLeft') show(cur - 1);
+    if (e.key === 'ArrowRight') show(cur + 1);
+  });
+  let x0 = null;
+  lb.addEventListener('touchstart', e => { x0 = e.touches[0].clientX; }, { passive: true });
+  lb.addEventListener('touchend', e => {
+    if (x0 === null) return;
+    const dx = e.changedTouches[0].clientX - x0;
+    if (Math.abs(dx) > 50) show(cur + (dx < 0 ? 1 : -1));
+    x0 = null;
+  });
+
+  // Nav turns solid after the hero; highlight the section on screen.
+  const nav = document.getElementById('nav');
+  const solid = () => nav.classList.toggle('solid', scrollY > innerHeight * .6);
+  addEventListener('scroll', solid, { passive: true }); solid();
+  const links = document.querySelectorAll('nav ul a');
+  const spy = new IntersectionObserver(es => es.forEach(e => {
+    if (e.isIntersecting) links.forEach(a => a.classList.toggle('active', a.hash === '#' + e.target.id));
+  }), { rootMargin: '-45% 0px -50% 0px' });
+  document.querySelectorAll('section[id], #about, #contact').forEach(s => spy.observe(s));
+
+  // Scroll reveals
+  const io = new IntersectionObserver(es => es.forEach(e => {
+    if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); }
+  }), { rootMargin: '0px 0px -8% 0px' });
+  document.querySelectorAll('.reveal').forEach(el => io.observe(el));
+
+  // Glide to in-page links instead of jumping (same feel as the resume site).
+  const ease = t => t < .5 ? 4 * t * t * t : 1 - (-2 * t + 2) ** 3 / 2;
+  let glide;
+  document.addEventListener('click', e => {
+    const a = e.target.closest('a[href^="#"]');
+    if (!a) return;
+    const target = a.hash ? document.querySelector(a.hash) : document.body;
+    if (!target) return;
+    e.preventDefault();
+    const start = scrollY;
+    const end = Math.min(target === document.body ? 0 : target.getBoundingClientRect().top + scrollY - 48, document.documentElement.scrollHeight - innerHeight);
+    const dur = calm.matches ? 0 : Math.min(1400, 600 + Math.abs(end - start) * 0.25);
+    const t0 = performance.now();
+    cancelAnimationFrame(glide);
+    const step = now => {
+      const p = dur ? Math.min(1, (now - t0) / dur) : 1;
+      scrollTo(0, start + (end - start) * ease(p));
+      if (p < 1) glide = requestAnimationFrame(step);
+    };
+    glide = requestAnimationFrame(step);
+    history.replaceState(null, '', a.hash || location.pathname);
+  });
+  addEventListener('wheel', () => cancelAnimationFrame(glide), { passive: true });
+  addEventListener('touchstart', () => cancelAnimationFrame(glide), { passive: true });
+</script>
+</body>
+</html>
