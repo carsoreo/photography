@@ -111,10 +111,12 @@
   .lb { position: fixed; inset: 0; z-index: 50; display: grid; grid-template-rows: 1fr auto; background: rgba(6, 7, 7, .96); opacity: 0; visibility: hidden; transition: opacity .35s var(--ease-std), visibility 0s .35s; }
   .lb.open { opacity: 1; visibility: visible; transition: opacity .35s var(--ease-std); }
   .lb figure { margin: 0; display: grid; place-items: center; padding: 56px 72px 12px; min-height: 0; }
-  .lb img { max-width: 100%; max-height: calc(100svh - 150px); object-fit: contain; border-radius: 2px; transition: opacity .25s var(--ease-std), transform .45s var(--ease-out); }
+  .lb img { max-width: 100%; max-height: calc(100svh - 170px); object-fit: contain; border-radius: 2px; transition: opacity .25s var(--ease-std), transform .45s var(--ease-out); }
   .lb img.swap { opacity: 0; transform: scale(.985); }
   .lb .meta { display: flex; flex-wrap: wrap; justify-content: center; gap: 6px 22px; padding: 10px 24px 24px; font-size: 14px; color: var(--muted); text-align: center; }
   .lb .meta b { color: var(--text); font-weight: 600; }
+  .lb .shop { flex-basis: 100%; margin-top: 2px; font-size: 11px; letter-spacing: .14em; text-transform: uppercase; color: var(--muted); opacity: .55; text-decoration: none; transition: opacity .2s var(--ease-std), color .2s var(--ease-std); }
+  .lb .shop:focus-visible { opacity: 1; color: var(--accent); outline: 1px solid var(--accent); outline-offset: 4px; }
   .lb button { position: absolute; display: grid; place-items: center; width: 48px; height: 48px; border-radius: 50%; border: 1px solid rgba(255,255,255,.14); background: rgba(255,255,255,.05); color: var(--text); font-size: 22px; cursor: pointer; transition: background-color .2s var(--ease-std), border-color .2s var(--ease-std); }
 
   .lb .close { top: 14px; right: 16px; }
@@ -154,6 +156,7 @@
     .tile:hover img.loaded { transform: scale(1.035); }
     .tile:hover .cap { opacity: 1; transform: none; }
     .lb button:hover { background: rgba(150,209,170,.15); border-color: var(--accent); }
+    .lb .shop:hover { opacity: 1; color: var(--accent); }
   }
   /* Reduced motion: keep gentle fades, drop movement and zooms. */
   @media (prefers-reduced-motion: reduce) {
@@ -299,7 +302,8 @@
       caption(p) && `<b>${caption(p)}</b>`,
       [p.camera, lensName(p)].filter(Boolean).join(' + '),
       p.settings
-    ].filter(Boolean).map(s => `<span>${s}</span>`).join('');
+    ].filter(Boolean).map(s => `<span>${s}</span>`).join('')
+      + (p.shop ? `<a class="shop" href="https://www.redbubble.com/shop/ap/${p.shop}?asc=u" target="_blank" rel="noopener">Prints available ↗</a>` : '');
   }
   function open(i) {
     opener = document.activeElement;
