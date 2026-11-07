@@ -1,10 +1,11 @@
 # photography
 
+[![tests](https://github.com/carsoreo/photography/actions/workflows/test.yml/badge.svg)](https://github.com/carsoreo/photography/actions/workflows/test.yml)
 [![Live gallery](https://img.shields.io/badge/live-carsoreo.github.io%2Fphotography-007190?style=flat-square)](https://carsoreo.github.io/photography/)
 [![Instagram](https://img.shields.io/badge/@car__sore-0D2B33?style=flat-square&logo=instagram&logoColor=96D1AA)](https://www.instagram.com/car_sore/)
 ![Photos](https://img.shields.io/badge/photos-86-00978D?style=flat-square)
 
-Wildlife, landscape and street photography by Carson Orejola — a dark, gallery-style static site with no framework.
+Wildlife, landscape and street photography by Carson Orejola. It's a dark, gallery-style static site with no framework.
 
 **→ [carsoreo.github.io/photography](https://carsoreo.github.io/photography/)**
 
@@ -30,7 +31,7 @@ Each entry in `photos.js` looks like:
   src: "photos/wildlife/wildlife-01.jpg",
   thumb: "photos/wildlife/wildlife-01-sm.jpg",
   collection: "wildlife",
-  w: 900, h: 600,
+  w: 900, h: 600,        // aspect ratio of the grid tile
   place: "Chattanooga, TN",
   date: "Aug 2026",
   camera: "Canon EOS R7",
@@ -39,10 +40,18 @@ Each entry in `photos.js` looks like:
 }
 ```
 
+## Tests
+
+```sh
+node --test
+```
+
+The tests read `photos.js` and every image under `photos/`. They check that each listed photo and thumbnail exists, has the listed shape and contains no EXIF or XMP metadata, that no image is published without being listed, and that the photo count in this README is current. They run on every push.
+
 ## Gear
 
-Canon EOS R7 with the RF 100–400mm, and the Canon Rebel SL1 for older work. Edited in Darktable.
+Canon EOS R7 with the RF 100-400mm, and the Canon Rebel SL1 for older work. Edited in Darktable.
 
 ## License
 
-The code is free to reuse. The photographs are © Carson Orejola, all rights reserved — please ask before using them.
+The code is free to reuse. The photographs are © Carson Orejola, all rights reserved. Please ask before using them.
