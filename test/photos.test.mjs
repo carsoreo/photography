@@ -76,6 +76,16 @@ test('every image in photos/ is listed, so nothing is published by accident', ()
   }
 });
 
+test('the hero layers match the eagle photo and carry no metadata', () => {
+  const sky = jpegInfo(read('hero-sky.jpg')), photo = jpegInfo(read('photos/wildlife/wildlife-30.jpg'));
+  assert.equal(sky.exif, false, 'hero-sky.jpg has EXIF or XMP metadata');
+  assert.deepEqual([sky.w, sky.h], [photo.w, photo.h]);
+  // WebP keeps metadata in chunks named EXIF and XMP; the eagle layer must have neither.
+  const eagle = read('hero-eagle.webp').toString('latin1');
+  assert.ok(eagle.startsWith('RIFF'), 'hero-eagle.webp is not a WebP file');
+  assert.ok(!eagle.includes('EXIF') && !eagle.includes('XMP '), 'hero-eagle.webp has metadata');
+});
+
 test('the README photo count matches photos.js', () => {
   const badge = read('README.md').toString().match(/badge\/photos-(\d+)-/);
   assert.equal(Number(badge?.[1]), photos.length);

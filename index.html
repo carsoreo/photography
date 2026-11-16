@@ -65,6 +65,13 @@
   .hero img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; transform: scale(1.06); animation: settle 2.4s var(--ease-out) forwards; }
   .hero::after { content: ""; position: absolute; inset: 0; background: linear-gradient(180deg, rgba(11,13,12,.35) 0%, rgba(11,13,12,0) 30%, rgba(11,13,12,.15) 55%, var(--bg) 100%); }
   @keyframes settle { to { transform: scale(1); } }
+  /* The eagle is its own layer, cut out of the photo by tools/make_hero.py, so it can glide into the frame while
+     the sky stays put. It starts small, high and past the right edge, banking a little, dips on the way in, and
+     lands exactly where the photo has it. transform-origin is the bird, so it shrinks and banks about itself. */
+  .hero .eagle { transform: none; transform-origin: 62% 47%; animation: none; }
+  .hero.go .eagle { animation: fly-in 2.8s cubic-bezier(.35, .35, .2, 1) both, swoop 2.8s ease-in-out both; }
+  @keyframes fly-in { from { transform: translate(80vw, -26vh) scale(.5) rotate(-10deg); } }
+  @keyframes swoop { 55% { translate: 0 5vh; } }
   .hero .wrap { position: relative; z-index: 1; width: 100%; padding-bottom: 72px; }
   .hero h1 { font-family: "Tangerine", "Oranienbaum", cursive; font-size: clamp(76px, 13vw, 168px); font-weight: 400; line-height: .8; letter-spacing: 0; margin: 0 0 18px -.04em; color: #F4F1E8; }
   .hero p { font-size: clamp(17px, 2vw, 20px); color: #D3D8D5; max-width: 560px; margin: 0 0 28px; }
@@ -155,10 +162,13 @@
   .js .reveal { opacity: 0; transform: translateY(26px); transition: opacity .8s var(--ease-out), transform .8s var(--ease-out); }
   .js .reveal.in { opacity: 1; transform: none; }
   @keyframes rise { from { opacity: 0; transform: translateY(22px); } }
-  .hero .wrap > * { animation: rise .9s var(--ease-out) both; }
-  .hero .wrap > :nth-child(2) { animation-delay: .12s; }
-  .hero .wrap > :nth-child(3) { animation-delay: .24s; }
-  .hero .wrap > :nth-child(4) { animation-delay: .36s; }
+  /* Hero entrance. The script starts it (.go) once the eagle layer has loaded, so the bird never pops in late:
+     the eagle glides in from the right, my name follows from the same side, then the line and links rise. */
+  .js .hero:not(.go) .eagle, .js .hero:not(.go) .wrap > * { opacity: 0; }
+  .hero.go .wrap > * { animation: rise .9s var(--ease-out) 1.1s both; }
+  .hero.go .wrap > :nth-child(3) { animation-delay: 1.25s; }
+  .hero.go .wrap > h1 { animation: name-in 1.7s var(--ease-out) .35s both; }
+  @keyframes name-in { from { opacity: 0; transform: translateX(14vw); filter: blur(10px); } }
 
   @media (max-width: 900px) {
     :root { --row: 180px; }
@@ -217,8 +227,9 @@
   </div>
 </nav>
 
-<header class="hero">
-  <img src="photos/wildlife/wildlife-30.jpg" alt="A bald eagle in flight against a pale grey sky">
+<header class="hero" id="hero">
+  <img src="hero-sky.jpg" alt="">
+  <img class="eagle" id="eagle" src="hero-eagle.webp" alt="A bald eagle in flight against a pale grey sky">
   <div class="wrap">
     <h1>Carson Orejola</h1>
     <p>Wildlife, landscapes and the streets of Durham, shot on long glass and edited in Darktable. Follow along at <a class="handle" href="https://www.instagram.com/car_sore/" target="_blank" rel="noopener">@car_sore</a>.</p>
@@ -293,6 +304,10 @@
   const photos = window.PHOTOS || [];
   const main = document.getElementById('collections');
   document.getElementById('year').textContent = new Date().getFullYear();
+
+  // Start the hero entrance when the eagle layer can be painted (or has failed, so the text still shows).
+  const go = () => document.getElementById('hero').classList.add('go');
+  document.getElementById('eagle').decode().then(go, go);
 
   // Lens strings like "400mm" carry no lens name, so only show real lens names.
   const lensName = p => /[A-Za-z]{2}/.test(p.lens.replace(/mm/g, '')) ? p.lens : '';

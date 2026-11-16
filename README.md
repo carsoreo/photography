@@ -11,6 +11,7 @@ Wildlife, landscape and street photography by Carson Orejola. It's a dark, galle
 
 ## Features
 
+- **The eagle flies in.** On load the bald eagle glides into the hero from the right and my name follows it. The bird is its own transparent layer, cut out of the photo by [`tools/make_hero.py`](tools/make_hero.py), over the same sky with the bird painted out.
 - **Four collections:** wildlife (mostly birds), landscapes, street and details.
 - **Full-screen viewer** with keyboard (← → Esc) and swipe navigation, showing where and when each shot was taken plus the camera, lens and exposure. The photo grows out of its thumbnail and shrinks back into it (a view transition), and the thumbnail stands in until the full-size file arrives.
 - **EXIF explorer:** four linked charts of focal length, aperture, shutter speed and ISO across every photo. Pointing at a bar shows that slice in the other three; selecting it lists the photos.
