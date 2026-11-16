@@ -42,6 +42,11 @@ test('photos.js lists photos with the fields the gallery reads', () => {
   }
 });
 
+// The EXIF charts in index.html parse these four values; a new shape (say a "2s" exposure) should fail here, not vanish from a chart.
+test('every photo has the four camera settings the EXIF charts read', () => {
+  for (const p of photos) assert.match(p.settings, /^\d+mm · f\/[\d.]+ · 1\/\d+s · ISO \d+$/, `${p.src}: ${p.settings}`);
+});
+
 test('no photo is listed twice', () => {
   const srcs = photos.map((p) => p.src);
   assert.equal(new Set(srcs).size, srcs.length);

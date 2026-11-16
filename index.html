@@ -35,13 +35,16 @@
     --row: 260px;
   }
   * { box-sizing: border-box; }
-  html { background: var(--bg); }
+  /* Browser surfaces take the palette too: selection, focus ring, scrollbar. */
+  ::selection { background: var(--accent); color: var(--bg); }
+  :focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
+  html { background: var(--bg); scrollbar-color: #2C322F var(--bg); }
+  .sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
   body { margin: 0; background: var(--bg); color: var(--text); font: 400 16px/1.65 "Hanken Grotesk", system-ui, sans-serif; -webkit-font-smoothing: antialiased; }
   a { color: var(--accent); text-underline-offset: 3px; }
   /* Luxury type: Oranienbaum (high-contrast antiqua) for headings, Tangerine (calligraphy) for my name in the hero. Both OFL. */
   h1, h2, h3, .mark { font-family: "Oranienbaum", Georgia, serif; font-weight: 400; letter-spacing: .005em; }
   .wrap { max-width: 1400px; margin: 0 auto; padding: 0 24px; }
-  .eyebrow { font: 600 12px/1.4 "Hanken Grotesk", sans-serif; letter-spacing: .14em; text-transform: uppercase; color: var(--accent); margin: 0 0 12px; }
 
   /* Nav */
   nav { position: fixed; inset: 0 0 auto; z-index: 30; transition: background-color .4s var(--ease-std), border-color .4s var(--ease-std); border-bottom: 1px solid transparent; }
@@ -75,7 +78,8 @@
   .head { display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: space-between; gap: 12px 32px; margin-bottom: 28px; }
   .head h2 { font-size: clamp(38px, 5.4vw, 64px); line-height: 1; margin: 0; }
   .head p { color: var(--muted); max-width: 460px; margin: 0; }
-  .count { color: var(--muted); font-size: 14px; font-weight: 500; }
+  /* How many photos, set small beside the heading instead of as a label above it. */
+  .count { font: 500 14px/1 "Hanken Grotesk", sans-serif; letter-spacing: 0; color: var(--muted); vertical-align: top; margin-left: 4px; font-variant-numeric: tabular-nums; }
 
   /* Justified rows: each tile grows in proportion to its aspect ratio */
   .grid { display: flex; flex-wrap: wrap; gap: 8px; }
@@ -87,12 +91,28 @@
 
   .tile .cap { position: absolute; left: 0; right: 0; bottom: 0; padding: 28px 14px 12px; font-size: 13px; color: #fff; text-align: left; background: linear-gradient(transparent, rgba(0,0,0,.65)); opacity: 0; transform: translateY(6px); transition: opacity .3s var(--ease-std), transform .3s var(--ease-std); }
   .tile:focus-visible .cap { opacity: 1; transform: none; }
-  .tile:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+  /* Explorer: four linked histograms in one hue. A bar's fill is the share of its photos in the slice being inspected. */
+  .charts { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 40px 32px; }
+  .chart h3 { font: 500 14px/1.4 "Hanken Grotesk", sans-serif; letter-spacing: 0; color: var(--muted); margin: 0 0 4px; }
+  .bars { display: flex; height: 168px; }
+  /* The whole column is the button, so the target is far bigger than the mark. */
+  .bar { flex: 1; min-width: 0; display: flex; flex-direction: column; justify-content: flex-end; padding: 0; border: 0; background: none; color: var(--text); font: inherit; cursor: pointer; }
+  .bar .n { padding-bottom: 6px; font-size: 12px; line-height: 1; font-variant-numeric: tabular-nums; }
+  .bar .col { position: relative; height: calc(var(--h) * 104px); min-height: 3px; margin: 0 1px; border-radius: 4px 4px 0 0; background: rgba(255, 255, 255, .1); overflow: hidden; transition: background-color .2s var(--ease-std); }
+  .bar .sub { position: absolute; inset: 0; background: var(--accent); transform-origin: bottom; transform: scaleY(var(--s, 1)); transition: transform .35s var(--ease-out); }
+  .bar .lbl { height: 30px; padding-top: 8px; border-top: 1px solid rgba(255, 255, 255, .16); font-size: 11px; line-height: 1; white-space: nowrap; color: var(--muted); transition: color .2s var(--ease-std); }
+  .bar.none .n { color: var(--muted); }
+  .bar[aria-pressed="true"] .lbl { color: var(--text); }
+  .status { margin: 36px 0 16px; color: var(--muted); font-size: 14px; }
+  @media (max-width: 1279px) { .charts { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+  @media (max-width: 560px) { .charts { grid-template-columns: 1fr; } }
 
   /* About / gear / contact */
   .info { display: grid; grid-template-columns: 1.3fr 1fr; gap: 64px; padding: 120px 0 64px; border-top: 1px solid var(--line); margin-top: 96px; }
   .info h2 { font-size: clamp(34px, 4.6vw, 52px); line-height: 1.05; margin: 0 0 20px; }
   .info p { color: #C9CFCC; max-width: 620px; }
+  .info h3 { font-size: 26px; line-height: 1.1; margin: 0 0 8px; }
   .gear { list-style: none; margin: 0; padding: 0; }
   .gear li { display: flex; justify-content: space-between; gap: 16px; padding: 14px 0; border-bottom: 1px solid var(--line); }
   .gear li span:last-child { color: var(--muted); text-align: right; }
@@ -108,11 +128,18 @@
   footer .wrap { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 12px; }
 
   /* Lightbox */
-  .lb { position: fixed; inset: 0; z-index: 50; display: grid; grid-template-rows: 1fr auto; background: rgba(6, 7, 7, .96); opacity: 0; visibility: hidden; transition: opacity .35s var(--ease-std), visibility 0s .35s; }
-  .lb.open { opacity: 1; visibility: visible; transition: opacity .35s var(--ease-std); }
+  /* A native <dialog>: focus stays inside it, the page behind is inert, and Esc closes it. */
+  .lb { position: fixed; inset: 0; width: 100%; height: 100%; max-width: none; max-height: none; margin: 0; padding: 0; border: 0; grid-template-rows: 1fr auto; color: var(--text); background: rgba(6, 7, 7, .96); }
+  .lb[open] { display: grid; }
   .lb figure { margin: 0; display: grid; place-items: center; padding: 56px 72px 12px; min-height: 0; }
-  .lb img { max-width: 100%; max-height: calc(100svh - 170px); object-fit: contain; border-radius: 2px; transition: opacity .25s var(--ease-std), transform .45s var(--ease-out); }
-  .lb img.swap { opacity: 0; transform: scale(.985); }
+  /* Sized from the photo's shape (--r), not its pixels, so the thumbnail fills the same box the full image will. */
+  .lb img { width: min(100%, calc((100svh - 170px) * var(--r, 1.5))); aspect-ratio: var(--r, 1.5); object-fit: contain; border-radius: 2px; }
+  /* The photo travels between its tile and the viewer; everything else cross-fades. */
+  @media (prefers-reduced-motion: no-preference) {
+    .tile.vt img, .lb img { view-transition-name: photo; }
+    ::view-transition-group(photo) { animation-duration: .45s; animation-timing-function: var(--ease-out); }
+    ::view-transition-old(photo), ::view-transition-new(photo) { height: 100%; object-fit: cover; }
+  }
   .lb .meta { display: flex; flex-wrap: wrap; justify-content: center; gap: 6px 22px; padding: 10px 24px 24px; font-size: 14px; color: var(--muted); text-align: center; }
   .lb .meta b { color: var(--text); font-weight: 600; }
   .lb .shop { flex-basis: 100%; margin-top: 2px; font-size: 11px; letter-spacing: .14em; text-transform: uppercase; color: var(--muted); opacity: .55; text-decoration: none; transition: opacity .2s var(--ease-std), color .2s var(--ease-std); }
@@ -157,13 +184,14 @@
     .tile:hover .cap { opacity: 1; transform: none; }
     .lb button:hover { background: rgba(150,209,170,.15); border-color: var(--accent); }
     .lb .shop:hover { opacity: 1; color: var(--accent); }
+    .bar:hover .col { background: rgba(255, 255, 255, .18); }
   }
   /* Reduced motion: keep gentle fades, drop movement and zooms. */
   @media (prefers-reduced-motion: reduce) {
     *, *::before, *::after { animation: none !important; }
     .js .reveal { transform: none; transition: opacity .4s ease; }
     .tile img, .tile:hover img.loaded, .hero img { transform: none !important; }
-    .lb img { transform: none !important; }
+    .bar .sub { transition: none; }
   }
 </style>
 <script>document.documentElement.classList.add('js');</script>
@@ -178,6 +206,7 @@
       <li><a href="#landscapes">Landscapes</a></li>
       <li><a href="#street">Street</a></li>
       <li><a href="#details">Details</a></li>
+      <li><a href="#exif">EXIF</a></li>
       <li><a href="#about">About</a></li>
       <li><a href="#contact">Contact</a></li>
     </ul>
@@ -202,13 +231,19 @@
 <main class="wrap" id="collections"></main>
 
 <div class="wrap">
+  <section id="exif">
+    <div class="head reveal"><h2>How they were shot</h2><p>Every photo here keeps its camera settings. Point at a bar to see that slice in the other three charts; select it to see the photos.</p></div>
+    <div class="charts" id="charts"></div>
+    <p class="status" id="x-status" role="status"></p>
+    <div class="grid" id="x-grid"></div>
+  </section>
+
   <div class="info" id="about">
     <div class="reveal">
-      <p class="eyebrow">About</p>
       <h2>Slow walks,<br>long lenses.</h2>
       <p>I'm Carson, a Technical Support Engineer in Durham, North Carolina, who spends free mornings out with a camera. What started as photographing my own neighborhood turned into trips to the Olympic Peninsula, Boston and Chattanooga, plenty of slow walks through downtown Durham, and an ever-growing Darktable library.</p>    </div>
     <div class="reveal" id="gear">
-      <p class="eyebrow">Gear</p>
+      <h3>Gear</h3>
       <ul class="gear">
         <li><span>Canon EOS R7</span><span>Main body</span></li>
         <li><span>Canon RF 100–400mm f/5.6–8 IS USM</span><span>Wildlife &amp; landscapes</span></li>
@@ -221,7 +256,6 @@
   </div>
 
   <div class="contact reveal" id="contact">
-    <p class="eyebrow">Contact</p>
     <h2>Say hello.</h2>
     <p>Questions about a photo, interested in a print, or want to shoot together? Send me an email or a DM.</p>
     <div class="btns">
@@ -238,14 +272,14 @@
   </div>
 </footer>
 
-<div class="lb" id="lb" role="dialog" aria-modal="true" aria-label="Photo viewer">
+<dialog class="lb" id="lb" aria-label="Photo viewer">
   <span class="n" id="lb-n"></span>
   <figure id="lb-fig"></figure>
   <div class="meta" id="lb-meta"></div>
-  <button class="close" id="lb-close" aria-label="Close">✕</button>
+  <button class="close" id="lb-close" aria-label="Close" autofocus>✕</button>
   <button class="prev" id="lb-prev" aria-label="Previous photo">←</button>
   <button class="next" id="lb-next" aria-label="Next photo">→</button>
-</div>
+</dialog>
 
 <script src="photos.js"></script>
 <script>
@@ -264,75 +298,149 @@
   const lensName = p => /[A-Za-z]{2}/.test(p.lens.replace(/mm/g, '')) ? p.lens : '';
   const caption = p => [p.place, p.date].filter(Boolean).join(' · ');
 
+  const label = p => `${COLLECTIONS[p.collection][0]} photo${caption(p) ? ', ' + caption(p) : ''}`;
+  const all = photos.map((_, i) => i);
+
+  // One grid tile. `set` is the list of photo indexes the viewer pages through when it opens from this tile.
+  function tile(i, set) {
+    const p = photos[i], b = document.createElement('button');
+    b.className = 'tile';
+    b.dataset.i = i;
+    b.style.setProperty('--r', (p.w / p.h).toFixed(3));
+    b.setAttribute('aria-label', `Open ${label(p)}`);
+    b.innerHTML = `<img src="${p.thumb}" alt="" loading="lazy" decoding="async"><span class="cap">${caption(p)}</span>`;
+    const img = b.firstChild;
+    img.complete ? img.classList.add('loaded') : img.addEventListener('load', () => img.classList.add('loaded'));
+    b.addEventListener('click', () => open(b, set));
+    return b;
+  }
+
   for (const [key, [title, blurb]] of Object.entries(COLLECTIONS)) {
-    const list = photos.filter(p => p.collection === key);
+    const list = all.filter(i => photos[i].collection === key);
     const sec = document.createElement('section');
     sec.id = key;
-    sec.innerHTML = `<div class="head reveal"><div><p class="eyebrow">${list.length} photos</p><h2>${title}</h2></div><p>${blurb}</p></div><div class="grid"></div>`;
-    const grid = sec.querySelector('.grid');
-    for (const p of list) {
-      const i = photos.indexOf(p);
-      const b = document.createElement('button');
-      b.className = 'tile';
-      b.style.setProperty('--r', (p.w / p.h).toFixed(3));
-      b.setAttribute('aria-label', `Open ${title.toLowerCase()} photo${caption(p) ? ', ' + caption(p) : ''}`);
-      b.innerHTML = `<img src="${p.thumb}" alt="" loading="lazy" decoding="async"><span class="cap">${caption(p)}</span>`;
-      const img = b.querySelector('img');
-      img.complete ? img.classList.add('loaded') : img.addEventListener('load', () => img.classList.add('loaded'));
-      b.addEventListener('click', () => open(i));
-      grid.append(b);
-    }
+    sec.innerHTML = `<div class="head reveal"><h2>${title} <span class="count">${list.length}<span class="sr"> photos</span></span></h2><p>${blurb}</p></div><div class="grid"></div>`;
+    sec.lastChild.append(...list.map(i => tile(i, all)));
     main.append(sec);
   }
 
-  // Lightbox
-  // The viewer image is created on first open so the page never ships an <img> without a src.
+  // Explorer: four histograms over the same photos. Pointing at a bar (or focusing it) previews that slice in
+  // the other three charts; selecting it pins the slice and lists its photos.
+  const setting = (p, re) => +p.settings.match(re)[1];
+  // [title, a photo's value, upper edge of each bin, bin labels]. The last bin has no upper edge, so a new photo is never dropped.
+  const DIMS = [
+    ['Focal length', p => setting(p, /(\d+)mm/), [35, 70, 135, 200, 300], ['≤35mm', '36–70', '71–135', '136–200', '201–300', '301mm+']],
+    ['Aperture', p => setting(p, /f\/([\d.]+)/), [2.8, 5, 5.6, 7.1], ['≤f/2.8', 'f/4–5', 'f/5.6', 'f/6.3–7.1', 'f/8+']],
+    ['Shutter speed', p => setting(p, /1\/(\d+)s/), [125, 250, 500, 800], ['to 1/125s', '1/160–250', '1/320–500', '1/640–800', '1/1000s+']],
+    ['ISO', p => setting(p, /ISO (\d+)/), [200, 500, 1250, 4000], ['≤200', '250–500', '640–1250', '2500–4000', '5000+']],
+  ];
+  // where[i][d] is the bin photo i falls in on chart d.
+  const where = photos.map(p => DIMS.map(([, value, edges]) => { const k = edges.findIndex(e => value(p) <= e); return k < 0 ? edges.length : k; }));
+  const xGrid = document.getElementById('x-grid'), xStatus = document.getElementById('x-status');
+  const bars = [];
+  let pinned = null;
+  const same = (a, b) => !!a && !!b && a.d === b.d && a.k === b.k;
+  function paint(slice) {
+    for (const bar of bars) {
+      const n = slice ? where.filter(w => w[slice.d] === slice.k && w[bar.d] === bar.k).length : bar.total;
+      bar.el.style.setProperty('--s', n / bar.total);
+      bar.el.classList.toggle('none', !n);
+      bar.el.firstChild.textContent = n;
+    }
+  }
+  function pin(slice) {
+    pinned = slice;
+    paint(slice);
+    for (const bar of bars) bar.el.setAttribute('aria-pressed', same(bar, slice));
+    const list = slice ? all.filter(i => where[i][slice.d] === slice.k) : [];
+    xGrid.replaceChildren(...list.map(i => tile(i, list)));
+    xStatus.textContent = slice ? `${list.length} photo${list.length > 1 ? 's' : ''} · ${DIMS[slice.d][0]} ${DIMS[slice.d][3][slice.k]}` : 'No bar selected.';
+  }
+  DIMS.forEach(([title, , , names], d) => {
+    const fig = document.createElement('div');
+    fig.className = 'chart';
+    fig.innerHTML = `<h3>${title}</h3><div class="bars"></div>`;
+    const totals = names.map((_, k) => where.filter(w => w[d] === k).length), max = Math.max(...totals);
+    names.forEach((name, k) => {
+      const el = document.createElement('button'), bar = { d, k, el, total: totals[k] };
+      el.className = 'bar';
+      el.type = 'button';
+      el.disabled = !bar.total;
+      el.style.setProperty('--h', bar.total / max);
+      el.setAttribute('aria-label', `${title} ${name}: ${bar.total} photos`);
+      el.innerHTML = `<span class="n"></span><span class="col"><span class="sub"></span></span><span class="lbl">${name}</span>`;
+      el.onmouseenter = el.onfocus = () => paint(bar);
+      el.onmouseleave = el.onblur = () => paint(pinned);
+      el.onclick = () => pin(same(bar, pinned) ? null : bar);
+      bars.push(bar);
+      fig.lastChild.append(el);
+    });
+    document.getElementById('charts').append(fig);
+  });
+  pin(null);
+
+  // Viewer. The photo grows out of the tile that opened it and shrinks back into the tile of the photo it ends
+  // on, as a view transition. Browsers without view transitions cut straight to the result.
   const lb = document.getElementById('lb'), lbImg = document.createElement('img');
   document.getElementById('lb-fig').append(lbImg);
-  let cur = -1, opener = null;
-  function show(i) {
-    cur = (i + photos.length) % photos.length;
-    const p = photos[cur];
-    lbImg.classList.add('swap');
-    const next = new Image();
-    next.onload = () => { lbImg.src = p.src; lbImg.alt = `${COLLECTIONS[p.collection][0]} photo${caption(p) ? ', ' + caption(p) : ''}`; requestAnimationFrame(() => lbImg.classList.remove('swap')); };
-    next.src = p.src;
-    document.getElementById('lb-n').textContent = `${cur + 1} / ${photos.length}`;
+  let set = [], cur = 0, from = null;
+  const morph = change => document.startViewTransition ? document.startViewTransition(change).finished : Promise.resolve(change());
+  // Resolves once the photo can be painted, so a transition never captures an empty frame.
+  function show(n) {
+    cur = (n + set.length) % set.length;
+    const i = set[cur], p = photos[i];
+    from = (from.closest('#x-grid') || main).querySelector(`[data-i="${i}"]`);
+    lbImg.style.setProperty('--r', p.w / p.h);
+    lbImg.alt = label(p);
+    // The thumbnail is already downloaded, so it shows at once; the full-size file replaces it when it arrives.
+    lbImg.src = p.thumb;
+    const full = new Image();
+    full.onload = () => { if (set[cur] === i) lbImg.src = p.src; };
+    full.src = p.src;
+    new Image().src = photos[set[(cur + 1) % set.length]].src; // start fetching the next photo
+    document.getElementById('lb-n').textContent = `${cur + 1} / ${set.length}`;
     document.getElementById('lb-meta').innerHTML = [
       caption(p) && `<b>${caption(p)}</b>`,
       [p.camera, lensName(p)].filter(Boolean).join(' + '),
       p.settings
     ].filter(Boolean).map(s => `<span>${s}</span>`).join('')
       + (p.shop ? `<a class="shop" href="https://www.redbubble.com/shop/ap/${p.shop}?asc=u" target="_blank" rel="noopener">Prints available ↗</a>` : '');
+    return lbImg.decode().catch(() => {});
   }
-  function open(i) {
-    opener = document.activeElement;
-    show(i);
-    lb.classList.add('open');
-    document.body.style.overflow = 'hidden';
-    document.getElementById('lb-close').focus();
+  function open(tile, list) {
+    from = tile; set = list;
+    tile.classList.add('vt');
+    morph(() => {
+      tile.classList.remove('vt');
+      lb.showModal();
+      document.body.style.overflow = 'hidden';
+      return show(list.indexOf(+tile.dataset.i));
+    });
   }
   function close() {
-    lb.classList.remove('open');
-    document.body.style.overflow = '';
-    opener && opener.focus();
+    const tile = from;
+    // Focusing the tile also scrolls it into view, so the photo has somewhere on screen to land.
+    morph(() => { lb.close(); tile.focus(); tile.classList.add('vt'); }).finally(() => tile.classList.remove('vt'));
   }
+  const step = by => morph(() => show(cur + by));
   document.getElementById('lb-close').onclick = close;
-  document.getElementById('lb-prev').onclick = () => show(cur - 1);
-  document.getElementById('lb-next').onclick = () => show(cur + 1);
+  document.getElementById('lb-prev').onclick = () => step(-1);
+  document.getElementById('lb-next').onclick = () => step(1);
   lb.addEventListener('click', e => { if (e.target === lb || e.target.tagName === 'FIGURE') close(); });
+  // Esc: close our way (with the transition). The close event also covers a browser-forced close.
+  lb.addEventListener('cancel', e => { e.preventDefault(); close(); });
+  lb.addEventListener('close', () => { document.body.style.overflow = ''; });
   addEventListener('keydown', e => {
-    if (!lb.classList.contains('open')) return;
-    if (e.key === 'Escape') close();
-    if (e.key === 'ArrowLeft') show(cur - 1);
-    if (e.key === 'ArrowRight') show(cur + 1);
+    if (!lb.open) return;
+    if (e.key === 'ArrowLeft') step(-1);
+    if (e.key === 'ArrowRight') step(1);
   });
   let x0 = null;
   lb.addEventListener('touchstart', e => { x0 = e.touches[0].clientX; }, { passive: true });
   lb.addEventListener('touchend', e => {
     if (x0 === null) return;
     const dx = e.changedTouches[0].clientX - x0;
-    if (Math.abs(dx) > 50) show(cur + (dx < 0 ? 1 : -1));
+    if (Math.abs(dx) > 50) step(dx < 0 ? 1 : -1);
     x0 = null;
   });
 

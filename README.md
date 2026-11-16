@@ -12,7 +12,8 @@ Wildlife, landscape and street photography by Carson Orejola. It's a dark, galle
 ## Features
 
 - **Four collections:** wildlife (mostly birds), landscapes, street and details.
-- **Full-screen viewer** with keyboard (← → Esc) and swipe navigation, showing where and when each shot was taken plus the camera, lens and exposure.
+- **Full-screen viewer** with keyboard (← → Esc) and swipe navigation, showing where and when each shot was taken plus the camera, lens and exposure. The photo grows out of its thumbnail and shrinks back into it (a view transition), and the thumbnail stands in until the full-size file arrives.
+- **EXIF explorer:** four linked charts of focal length, aperture, shutter speed and ISO across every photo. Pointing at a bar shows that slice in the other three; selecting it lists the photos.
 - **Fast loading:** small thumbnails in the grid, full-size images only in the viewer, lazy-loaded and decoded off the main thread.
 - **Privacy by default:** images are resized and stripped of metadata (including GPS) before they're committed. Captions come from a separate data file, so only the details I choose are published.
 
