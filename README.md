@@ -3,7 +3,7 @@
 [![tests](https://github.com/carsoreo/photography/actions/workflows/test.yml/badge.svg)](https://github.com/carsoreo/photography/actions/workflows/test.yml)
 [![Live gallery](https://img.shields.io/badge/live-carsoreo.github.io%2Fphotography-007190?style=flat-square)](https://carsoreo.github.io/photography/)
 [![Instagram](https://img.shields.io/badge/@car__sore-0D2B33?style=flat-square&logo=instagram&logoColor=96D1AA)](https://www.instagram.com/car_sore/)
-![Photos](https://img.shields.io/badge/photos-86-00978D?style=flat-square)
+![Photos](https://img.shields.io/badge/photos-115-00978D?style=flat-square)
 
 Wildlife, landscape and street photography by Carson Orejola. It's a dark, gallery-style static site with no framework.
 
@@ -26,6 +26,8 @@ Darktable export ──▶ resize + strip metadata ──▶ photos/<collection>
                                 └──────────────▶ photos.js  (caption + EXIF data)
 index.html  reads window.PHOTOS from photos.js and renders the grid and viewer
 ```
+
+To add photos, list the originals in a JSON file and run [`tools/add_photos.py`](tools/add_photos.py); it makes both sizes, strips the metadata and adds the entries to `photos.js`.
 
 Each entry in `photos.js` looks like:
 
