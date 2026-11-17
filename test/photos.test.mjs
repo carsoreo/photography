@@ -52,6 +52,12 @@ test('no photo is listed twice', () => {
   assert.equal(new Set(srcs).size, srcs.length);
 });
 
+// index.html uses a photo's file name as its link (#wildlife-30), so names must be unique across folders.
+test('every photo has its own link name', () => {
+  const names = photos.map((p) => p.src.match(/([^/]+)\.\w+$/)[1]);
+  assert.equal(new Set(names).size, names.length);
+});
+
 test("every photo and thumbnail exists, has the listed shape and no EXIF", () => {
   for (const p of photos) {
     const full = jpegInfo(read(p.src));

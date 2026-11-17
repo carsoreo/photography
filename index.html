@@ -312,6 +312,7 @@
   // Lens strings like "400mm" carry no lens name, so only show real lens names.
   const lensName = p => /[A-Za-z]{2}/.test(p.lens.replace(/mm/g, '')) ? p.lens : '';
   const caption = p => [p.place, p.date].filter(Boolean).join(' · ');
+  const slug = p => p.src.match(/([^/]+)\.\w+$/)[1];
 
   const label = p => `${COLLECTIONS[p.collection][0]} photo${caption(p) ? ', ' + caption(p) : ''}`;
   const all = photos.map((_, i) => i);
@@ -399,12 +400,14 @@
   const lb = document.getElementById('lb'), lbImg = document.createElement('img');
   document.getElementById('lb-fig').append(lbImg);
   let set = [], cur = 0, from = null;
-  const morph = change => document.startViewTransition ? document.startViewTransition(change).finished : Promise.resolve(change());
+  // A skipped transition (a hidden tab, or a second one starting) still makes the change, so its rejection is ignored.
+  const morph = change => document.startViewTransition ? document.startViewTransition(change).finished.catch(() => {}) : Promise.resolve(change());
   // Resolves once the photo can be painted, so a transition never captures an empty frame.
   function show(n) {
     cur = (n + set.length) % set.length;
     const i = set[cur], p = photos[i];
-    from = (from.closest('#x-grid') || main).querySelector(`[data-i="${i}"]`);
+    history.replaceState(null, '', '#' + slug(p));
+    from =(from.closest('#x-grid') || main).querySelector(`[data-i="${i}"]`);
     lbImg.style.setProperty('--r', p.w / p.h);
     lbImg.alt = label(p);
     // The thumbnail is already downloaded, so it shows at once; the full-size file replaces it when it arrives.
@@ -444,7 +447,7 @@
   lb.addEventListener('click', e => { if (e.target === lb || e.target.tagName === 'FIGURE') close(); });
   // Esc: close our way (with the transition). The close event also covers a browser-forced close.
   lb.addEventListener('cancel', e => { e.preventDefault(); close(); });
-  lb.addEventListener('close', () => { document.body.style.overflow = ''; });
+  lb.addEventListener('close', () => { document.body.style.overflow = ''; history.replaceState(null, '', location.pathname + location.search); });
   addEventListener('keydown', e => {
     if (!lb.open) return;
     if (e.key === 'ArrowLeft') step(-1);
@@ -458,6 +461,10 @@
     if (Math.abs(dx) > 50) step(dx < 0 ? 1 : -1);
     x0 = null;
   });
+  // Each photo's link is its file name (#wildlife-30), kept in the address while it is open, so the address
+  // can be shared and opens the same photo.
+  const linked = main.querySelector(`[data-i="${photos.findIndex(p => '#' + slug(p) === location.hash)}"]`);
+  if (linked) open(linked, all);
 
   // Nav turns solid after the hero; highlight the section on screen.
   const nav = document.getElementById('nav');
