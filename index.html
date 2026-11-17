@@ -400,8 +400,13 @@
   const lb = document.getElementById('lb'), lbImg = document.createElement('img');
   document.getElementById('lb-fig').append(lbImg);
   let set = [], cur = 0, from = null;
-  // A skipped transition (a hidden tab, or a second one starting) still makes the change, so its rejection is ignored.
-  const morph = change => document.startViewTransition ? document.startViewTransition(change).finished.catch(() => {}) : Promise.resolve(change());
+  function morph(change) {
+    if (!document.startViewTransition) return Promise.resolve(change());
+    const t = document.startViewTransition(change);
+    // A skipped transition (a hidden tab, or a second one starting) still makes the change; only `ready` rejects.
+    t.ready.catch(() => {});
+    return t.finished;
+  }
   // Resolves once the photo can be painted, so a transition never captures an empty frame.
   function show(n) {
     cur = (n + set.length) % set.length;
